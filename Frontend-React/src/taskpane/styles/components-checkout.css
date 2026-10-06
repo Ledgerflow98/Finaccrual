@@ -1,0 +1,237 @@
+/* ============================================================
+   components-checkout.css
+   Payment Order Summary, Checkout & Success Views
+   ============================================================ */
+
+/* ============================================================
+   PAYMENT VIEW
+   ============================================================ */
+.order-summary-card {
+  background: #f8f9fc;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.order-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.order-summary-row:last-child { margin-bottom: 0; }
+
+.order-summary-label {
+  font-size: 12px;
+  color: #6b7a9a;
+}
+
+.order-summary-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a2035;
+}
+
+.order-summary-divider {
+  border-top: 1px solid #e4e8f4;
+  margin: 10px 0;
+}
+
+.total-row .order-summary-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.order-summary-total {
+  font-size: 18px;
+  font-weight: 800;
+  color: #2459dd;
+}
+
+.payment-redirect-box {
+  background: linear-gradient(145deg, #f0f4ff, #fafbff);
+  border: 1.5px solid #dce4f8;
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.payment-redirect-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.payment-redirect-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a2035;
+  margin-bottom: 8px;
+}
+
+.payment-redirect-desc {
+  font-size: 11px;
+  color: #6b7a9a;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.payment-proceed-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #2459dd, #7c5cfc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.payment-proceed-btn:hover {
+  box-shadow: 0 6px 18px rgba(36,89,221,0.3);
+  transform: translateY(-1px);
+}
+
+.payment-proceed-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.payment-already-text {
+  font-size: 11px;
+  color: #8a98b8;
+  margin-top: 12px;
+}
+
+.payment-already-text a {
+  color: #2459dd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ============================================================
+   SUCCESS VIEW
+   ============================================================ */
+.success-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  gap: 14px;
+  text-align: center;
+  background: #ffffff;
+}
+
+.success-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22b14c, #16a34a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(34,177,76,0.3);
+  animation: successPop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes successPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.success-check {
+  font-size: 28px;
+  color: white;
+  font-weight: 700;
+}
+
+.success-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a2035;
+}
+
+.success-subtitle {
+  font-size: 12px;
+  color: #6b7a9a;
+  margin-top: -8px;
+}
+
+.success-id-card {
+  background: #eff6ff;
+  border: 1.5px solid #bae6fd;
+  border-radius: 12px;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 260px;
+}
+
+.success-id-label {
+  font-size: 10px;
+  color: #6b7a9a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.success-id-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1d4ed8;
+  font-family: 'Courier New', monospace;
+}
+
+.success-plan-card {
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 260px;
+}
+
+.success-plan-label {
+  font-size: 10px;
+  color: #6b7a9a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.success-plan-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.success-dashboard-btn {
+  margin-top: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #2459dd, #7c5cfc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.success-dashboard-btn:hover {
+  box-shadow: 0 6px 18px rgba(36,89,221,0.3);
+  transform: translateY(-1px);
+}
+
+

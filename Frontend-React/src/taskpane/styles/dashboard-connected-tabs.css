@@ -1,0 +1,419 @@
+/* ============================================================
+   dashboard-connected-tabs.css
+   Connected Header, Tabs, Active Company Box & Controls
+   ============================================================ */
+
+/* Connected Header - Image 2 match */
+.conn-header {
+  background: #172b56;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.conn-header-row1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.conn-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conn-logo-box {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 6px;
+  color: #172b56;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.conn-brand-title {
+  font-weight: 700;
+  color: white;
+  font-size: 13px;
+}
+.conn-brand-sub {
+  font-size: 8px;
+  color: #8fa4c7;
+  letter-spacing: 0.5px;
+}
+.conn-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conn-version {
+  font-size: 9px;
+  color: #8fa4c7;
+}
+.conn-logout-btn {
+  background: none;
+  border: none;
+  color: #8fa4c7;
+  cursor: pointer;
+  font-size: 14px;
+}
+.conn-logout-btn:hover {
+  color: white;
+}
+
+.conn-header-row2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conn-tier-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e8a020;
+  border: 1px solid #e8a020;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: transparent;
+}
+.conn-disconnect-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.conn-disconnect-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+.conn-status-dot {
+  color: #16a34a;
+  font-size: 10px;
+  margin-left: auto;
+}
+.conn-status-text {
+  font-size: 11px;
+  color: #ffffff;
+}
+.conn-status-text strong {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Not Connected State (Image 4) */
+.conn-status-dot-red {
+  color: #ef4444;
+  font-size: 10px;
+  margin-left: auto;
+}
+.conn-status-text-dim {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.conn-connect-provider-btn {
+  background: #22c55e;
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+  margin-left: 6px;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+.conn-connect-provider-btn:hover {
+  background: #16a34a;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Connected Body */
+.conn-body {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.conn-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: -6px;
+}
+
+/* Tabs */
+.conn-provider-tabs {
+  display: flex;
+  gap: 8px;
+}
+.conn-provider-tab {
+  flex: 1;
+  height: 38px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.conn-provider-tab.active {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+.conn-tab-arrow {
+  font-size: 8px;
+}
+
+.conn-tier-options {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: -8px;
+}
+.conn-tier-opt {
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #475569;
+}
+.conn-tier-opt:hover {
+  background: #f8fafc;
+}
+.conn-tier-opt.selected {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Active Company Box */
+.active-company-box {
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 8px -2px rgba(15, 45, 107, 0.04);
+}
+.active-company-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0F2D6B;
+}
+.company-select-dropdown {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  background: #F8FAFC;
+  color: #0f172a;
+}
+.btn-disconnect-company {
+  padding: 8px 14px;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-disconnect-company:hover {
+  background: #fca5a5;
+}
+
+/* Journal Toggle Buttons */
+.conn-section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F2D6B;
+  margin-bottom: 8px;
+}
+.conn-journal-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.conn-journal-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  color: #64748b;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.conn-journal-btn:hover {
+  border-color: #cbd5e1;
+  color: #0F2D6B;
+}
+.conn-journal-btn.active {
+  background: #0F2D6B;
+  border-color: #0F2D6B;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px -2px rgba(15, 45, 107, 0.25);
+}
+
+/* Schedule Buttons */
+.conn-action-btn {
+  width: 100%;
+  height: 56px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+.conn-action-btn.primary-btn {
+  background: #0F2D6B;
+  color: #ffffff;
+  box-shadow: 0 4px 14px -2px rgba(15, 45, 107, 0.25);
+}
+.conn-action-btn.primary-btn:hover {
+  background: #173b87;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -2px rgba(15, 45, 107, 0.35);
+}
+.conn-action-btn.secondary-btn {
+  background: #ffffff;
+  color: #0F2D6B;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+}
+.conn-action-btn.secondary-btn:hover {
+  background: #F8FAFC;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+.conn-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.refresh-schedule-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+/* Progress Panel & Log */
+.conn-progress-panel {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.18);
+}
+.conn-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #173b7a;
+  font-size: 12px;
+  font-weight: 700;
+}
+.conn-step.active {
+  color: #2563eb;
+}
+.conn-step.complete {
+  color: #15803d;
+}
+.conn-step-num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #173b7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.conn-step.complete .conn-step-num {
+  background: #10b981;
+}
+.conn-step.active .conn-step-num {
+  background: #2563eb;
+  animation: connStepPulse 1.4s ease-in-out infinite;
+}
+@keyframes connStepPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  }
+}
+.conn-log {
+  height: 80px;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.1px;
+  color: #15803d;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(100, 116, 139, 0.25), inset 0 1px 2px rgba(100, 116, 139, 0.12);
+}
+
+/* Success lines inherit the green above; failures turn red. */
+.conn-log .log-line { font-weight: 700; }
+.conn-log .log-line.log-error { color: #b91c1c; }
+

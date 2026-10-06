@@ -1,0 +1,53 @@
+# Root / Global
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Backend (Node.js / Express)
+Backend/node_modules/
+Backend/db.sqlite3
+Backend/db.sqlite3-journal
+Backend/.env
+
+# Admin (React + TypeScript / Vite)
+Admin/node_modules/
+Admin/dist/
+Admin/.env
+Admin/.env.local
+
+# Frontend-React (Excel Add-in / Webpack / Office JS / React)
+Frontend-React/node_modules/
+Frontend-React/dist/
+Frontend-React/.env
+
+# General Catch-all rules
+node_modules/
+env/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+*.sqlite3
+*.sqlite3-journal
+
+
+node_modules/
+.env
+.env.*
+!.env.example
+
+dist/
+build/
+coverage/
+.next/
+.vite/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+Thumbs.db

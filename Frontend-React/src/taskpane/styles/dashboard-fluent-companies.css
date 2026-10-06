@@ -1,0 +1,372 @@
+/* ============================================================
+   dashboard-fluent-companies.css
+   Fluent UI Body, Active Company Hero, List & Subscription
+   ============================================================ */
+
+/* ── FA SCROLLABLE BODY ────────────────────────────────────────── */
+.fa-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f4f6fb;
+}
+.fa-body::-webkit-scrollbar { width: 4px; }
+.fa-body::-webkit-scrollbar-track { background: transparent; }
+.fa-body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+/* ── ACTIVE COMPANY CARD ───────────────────────────────────────── */
+.fa-section-card {
+  background: #fff;
+  border: 1px solid #e2e8f4;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.fa-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7a9a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.fa-company-row {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.fa-company-select {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 8px;
+  background: #f8f9fc;
+  font-family: inherit;
+  font-size: 12px;
+  color: #1a2035;
+  cursor: pointer;
+  appearance: auto;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.fa-company-select:focus { border-color: #173b7a; }
+.fa-btn-outline {
+  white-space: nowrap;
+  padding: 7px 11px;
+  border: 1.5px solid #173b7a;
+  border-radius: 8px;
+  background: #fff;
+  color: #173b7a;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.fa-btn-outline:hover { background: #173b7a; color: #fff; }
+.fa-company-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #6b7a9a;
+}
+.fa-meta-label { font-weight: 600; color: #94a3b8; font-size: 10px; }
+.fa-meta-value { color: #1a2035; font-size: 11px; }
+.fa-meta-sep { color: #d1d5db; }
+.fa-conn-dot-sm { color: #22c55e; font-size: 8px; }
+
+/* ── COMPANY MANAGEMENT SECTION HEADER ────────────────────────── */
+.fa-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+.fa-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #173b7a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.fa-btn-add {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1.5px solid #173b7a;
+  border-radius: 7px;
+  background: #fff;
+  color: #173b7a;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.fa-btn-add:hover { background: #173b7a; color: #fff; }
+.fa-btn-add:hover svg { stroke: #fff; }
+
+/* ── COMPANY LIST ──────────────────────────────────────────────── */
+.fa-company-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fa-company-item {
+  background: #fff;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.fa-company-item:hover {
+  border-color: #173b7a;
+  box-shadow: 0 2px 8px rgba(23,59,122,0.08);
+}
+.fa-company-item.active-company {
+  border-color: #173b7a;
+  background: #f0f4ff;
+}
+.fa-company-item.disconnected-company {
+  opacity: 0.75;
+}
+.fa-company-item.disconnected-company:hover {
+  border-color: #fca5a5;
+  box-shadow: none;
+}
+.fa-modal-company-row.disconnected {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.fa-company-radio {
+  width: 16px;
+  height: 16px;
+  accent-color: #173b7a;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.fa-company-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2ca01c, #1d7012);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.fa-company-icon.xero-company-icon {
+  background: linear-gradient(135deg, #1ab4d7, #138fa8);
+}
+.fa-company-info {
+  flex: 1;
+  min-width: 0;
+}
+.fa-company-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a2035;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fa-company-tag {
+  font-size: 10px;
+  color: #6b7a9a;
+  margin-top: 1px;
+}
+.fa-company-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.fa-badge-active {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  letter-spacing: 0.3px;
+}
+.fa-btn-reconnect {
+  background: #fff;
+  color: #173b7a;
+  border: 1.5px solid #173b7a;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 10px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.fa-btn-reconnect:hover {
+  background: #173b7a;
+  color: #fff;
+}
+.fa-btn-switch {
+  padding: 4px 10px;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 6px;
+  background: #fff;
+  color: #173b7a;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.fa-btn-switch:hover { background: #173b7a; color: #fff; border-color: #173b7a; }
+.fa-btn-dots {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e2e8f4;
+  border-radius: 6px;
+  background: #fff;
+  color: #6b7a9a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.fa-btn-dots:hover { background: #f0f4ff; color: #173b7a; }
+.fa-company-list-footer {
+  font-size: 10px;
+  color: #173b7a;
+  font-weight: 600;
+  text-align: left;
+  padding-left: 2px;
+  margin-top: -4px;
+}
+
+/* ── SUBSCRIPTION INFO CARD ────────────────────────────────────── */
+.fa-sub-card {
+  background: #fff;
+  border: 1px solid #e2e8f4;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.fa-sub-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7a9a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.fa-sub-stats {
+  display: flex;
+  gap: 0;
+  background: #f8f9fc;
+  border: 1px solid #e2e8f4;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.fa-sub-stat {
+  flex: 1;
+  padding: 9px 10px;
+  text-align: center;
+}
+.fa-sub-stat-label {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+.fa-sub-stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #173b7a;
+}
+.fa-sub-stat-divider {
+  width: 1px;
+  background: #e2e8f4;
+  flex-shrink: 0;
+}
+.fa-sub-actions {
+  display: flex;
+  gap: 8px;
+}
+.fa-btn-sub-outline {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 8px;
+  background: #fff;
+  color: #173b7a;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  text-align: center;
+}
+.fa-btn-sub-outline:hover { background: #173b7a; color: #fff; border-color: #173b7a; }
+
+/* ── FA SECTION LABEL ──────────────────────────────────────────── */
+.fa-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7a9a;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 4px;
+}
+
+/* ── FA JOURNAL BUTTONS ────────────────────────────────────────── */
+.fa-journal-btns {
+  display: flex;
+  gap: 6px;
+  background: #f0f4ff;
+  border-radius: 10px;
+  padding: 3px;
+}
+.fa-journal-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7a9a;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.fa-journal-btn.active {
+  background: #173b7a;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(23,59,122,0.2);
+}
+.fa-journal-btn:hover:not(.active) { background: rgba(23,59,122,0.06); color: #173b7a; }
+

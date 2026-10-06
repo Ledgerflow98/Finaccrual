@@ -1,0 +1,355 @@
+'use strict';
+
+const crypto           = require('crypto');
+const bcrypt           = require('bcrypt');
+const UserRepository   = require('./user.repository');
+const JwtService       = require('./jwt.service');
+const GoogleService    = require('./google.service');
+const MicrosoftService = require('./microsoft.service');
+const logger           = require('../../core/logger');
+const config           = require('../../core/config');
+const { ValidationError, AuthenticationError } = require('../../core/errors/AppError');
+
+/**
+ * AuthService
+ * ----------------------------------------------------------------
+ * Central business-logic layer for all authentication flows:
+ *   - Local signup / login
+ *   - Google OAuth callback (upsert user, return JWT)
+ *
+ * Controllers stay thin — they only call methods here and shape
+ * the HTTP response.
+ * ----------------------------------------------------------------
+ */
+class AuthService {
+
+    // ----------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------
+
+    /**
+     * Build a safe public DTO from a User model instance.
+     * Never exposes google_id or microsoft_id.
+     * @param {object} user - Sequelize User instance
+     * @returns {{ id, name, email, role, provider }}
+     */
+    static _toUserDTO(user) {
+        return {
+            id:             user.id,
+            name:           user.name,
+            email:          user.email,
+            role:           user.role,
+            provider:       user.provider,
+            plan:           user.plan,
+            trialEndsAt:    user.trial_ends_at,
+            subscriptionId: user.id
+        };
+    }
+
+    /**
+     * Fields every brand-new signup gets, regardless of provider.
+     * Deliberately leaves plan/trial_ends_at unset — auto-enrolling a
+     * brand-new account into the trial here meant the frontend's "no
+     * plan yet" check (checkSubscription -> !!user.plan) was never
+     * false, so new users skipped straight past the Free Trial vs
+     * Subscription Plan screen (AppController.openTrialSelectDialog)
+     * into an already-running trial they never chose. The trial clock
+     * now only starts once the user explicitly picks "Start Free
+     * Trial" — see startTrial() below.
+     * Centralised here so signup(), handleGoogleCallback(), and
+     * handleMicrosoftCallback() can't drift out of sync on this.
+     * @returns {{ plan: null, trial_ends_at: null }}
+     */
+    static _newAccountDefaults() {
+        return {
+            plan:          null,
+            trial_ends_at: null
+        };
+    }
+
+    /**
+     * Starts the free trial for an already-authenticated user — called
+     * when they explicitly choose "Start Free Trial" on the Free Trial
+     * vs Subscription Plan screen. Sets the plan and a fresh
+     * trial_ends_at clock starting now (config.TRIAL.DURATION_MS long).
+     * @param {number} userId
+     * @returns {Promise<{ user: UserDTO }>}
+     */
+    static async startTrial(userId) {
+        const user = await UserRepository.update(userId, {
+            plan:          config.TRIAL.DEFAULT_PLAN,
+            trial_ends_at: new Date(Date.now() + config.TRIAL.DURATION_MS)
+        });
+        return { user: AuthService._toUserDTO(user) };
+    }
+
+    /**
+     * Build a signed access JWT for the given user.
+     * @param {object} user - Sequelize User instance
+     * @returns {string} signed access JWT (15 min)
+     */
+    static _buildToken(user) {
+        return JwtService.generateAccessToken({
+            userId: user.id,
+            email:  user.email,
+            role:   user.role
+        });
+    }
+
+    /**
+     * Generate an access/refresh token pair, persist the refresh token in
+     * the DB, and return both tokens to the caller.
+     * @param {object} user - Sequelize User instance
+     * @returns {Promise<{ accessToken: string, refreshToken: string }>}
+     */
+    static async _buildTokenPair(user) {
+        const accessToken  = JwtService.generateAccessToken({
+            userId: user.id,
+            email:  user.email,
+            role:   user.role
+        });
+        const refreshToken = JwtService.generateRefreshToken();
+
+        const accessTokenExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
+        const refreshTokenExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+        // Persist the new refresh token — overwrites any previous token so
+        // only one refresh token per user is valid at a time.
+        await UserRepository.update(user.id, {
+            access_token:  accessToken,
+            access_token_expires_at: accessTokenExpiresAt,
+            refresh_token: refreshToken,
+            refresh_token_expires_at: refreshTokenExpiresAt
+        });
+
+        return { accessToken, refreshToken };
+    }
+
+    // ----------------------------------------------------------------
+    // Local Email / Password
+    // ----------------------------------------------------------------
+
+    /**
+     * Register a new local (email + password) user.
+     *
+     * @param {string} name
+     * @param {string} email
+     * @param {string} password   Plain-text; hashed here before storage.
+     * @returns {Promise<{ token: string, user: UserDTO }>}
+     * @throws {Error} if email already registered
+     */
+    static async signup(name, email, password) {
+        throw new ValidationError('Local password authentication is disabled. Please sign in using Google or Microsoft OAuth.');
+    }
+
+    static async login(email, password) {
+        throw new AuthenticationError('Local password authentication is disabled. Please sign in using Google or Microsoft OAuth.');
+    }
+
+    // ----------------------------------------------------------------
+    // Token Refresh / Revoke
+    // ----------------------------------------------------------------
+
+    /**
+     * Validate an opaque refresh token, rotate it, and return a new token
+     * pair. The old refresh token is invalidated on success (rotation).
+     *
+     * @param {string} refreshToken - Opaque token stored client-side.
+     * @returns {Promise<{ token: string, refreshToken: string, user: UserDTO }>}
+     * @throws {AuthenticationError} if the token is not found / user inactive.
+     */
+    static async refreshTokens(refreshToken) {
+        if (!refreshToken) {
+            throw new AuthenticationError('Refresh token is required.');
+        }
+
+        const user = await UserRepository.findByRefreshToken(refreshToken);
+        if (!user || !user.is_active) {
+            throw new AuthenticationError('Invalid or expired refresh token.');
+        }
+
+        if (user.refresh_token_expires_at && new Date(user.refresh_token_expires_at) < new Date()) {
+            throw new AuthenticationError('Refresh token has expired. Please log in again.');
+        }
+
+        // Rotate: generate a new pair and persist it
+        const pair = await AuthService._buildTokenPair(user);
+
+        return {
+            token:        pair.accessToken,
+            refreshToken: pair.refreshToken,
+            user:         AuthService._toUserDTO(user)
+        };
+    }
+
+    /**
+     * Invalidate the stored refresh token on logout.
+     * @param {string} userId
+     * @returns {Promise<void>}
+     */
+    static async revokeRefreshToken(userId) {
+        await UserRepository.update(userId, {
+            access_token:  null,
+            access_token_expires_at: null,
+            refresh_token: null,
+            refresh_token_expires_at: null
+        });
+    }
+
+    // ----------------------------------------------------------------
+    // Google OAuth
+    // ----------------------------------------------------------------
+
+    /**
+     * Return the Google OAuth 2.0 authorisation URL to redirect the
+     * browser to.
+     * @param {string} [loginHint] - Previously-seen account's email; see
+     *   GoogleService.getAuthUrl() for why this skips the account chooser.
+     * @returns {string}
+     */
+    static getGoogleAuthUrl(loginHint) {
+        return GoogleService.getAuthUrl(loginHint);
+    }
+
+    /**
+     * Handle the Google OAuth callback.
+     * - Exchanges the code for tokens.
+     * - Fetches the Google profile.
+     * - Upserts the user in the database (create if new, update google_id if returning).
+     * - Returns the user DTO and JWT.
+     *
+     * @param {string} code   OAuth2 authorisation code from query string.
+     * @returns {Promise<{ token: string, user: UserDTO, isNewUser: boolean }>}
+     */
+    static async handleGoogleCallback(code) {
+        const tokens  = await GoogleService.exchangeCodeForToken(code);
+        const profile = await GoogleService.getUserProfile(tokens.access_token);
+
+        const googleId = profile.sub;
+        const email    = (profile.email || '').toLowerCase().trim();
+        const name     = profile.name  || profile.email || 'User';
+
+        // 1. Try to find by Google ID (fastest, most stable)
+        let user = await UserRepository.findByGoogleId(googleId);
+
+        // 2. Fall back to email lookup (handles users who signed up locally first)
+        if (!user) {
+            user = await UserRepository.findByEmail(email);
+        }
+
+        if (user) {
+            // Returning user — ensure google_id is persisted if missing
+            if (!user.google_id) {
+                user = await UserRepository.update(user.id, {
+                    google_id: googleId,
+                    provider:  'google'
+                });
+            }
+        } else {
+            // New user — create account
+            user = await UserRepository.create({
+                name,
+                email,
+                provider:  'google',
+                google_id: googleId,
+                role:      'user',
+                ...AuthService._newAccountDefaults()
+            });
+        }
+
+        const isNewUser = !user.created_at ||
+            (new Date() - new Date(user.created_at)) < 5000;
+
+        const pair = await AuthService._buildTokenPair(user);
+
+        return {
+            token:     pair.accessToken,
+            refreshToken: pair.refreshToken,
+            user:      AuthService._toUserDTO(user),
+            isNewUser
+        };
+    }
+
+    // ----------------------------------------------------------------
+    // Microsoft Entra ID (Azure AD) OAuth
+    // ----------------------------------------------------------------
+
+    /**
+     * Return the Microsoft Entra ID OAuth 2.0 authorisation URL to
+     * redirect the browser to.
+     * @param {string} [loginHint] - Previously-seen account's email; see
+     *   MicrosoftService.getAuthUrl() for why this skips the account
+     *   chooser.
+     * @returns {string}
+     */
+    static getMicrosoftAuthUrl(loginHint) {
+        return MicrosoftService.getAuthUrl(loginHint);
+    }
+
+    /**
+     * Handle the Microsoft Entra ID OAuth callback.
+     * - Exchanges the code for tokens.
+     * - Fetches the Microsoft Graph profile.
+     * - Upserts the user in the database (create if new, update
+     *   microsoft_id if returning).
+     * - Returns the user DTO and JWT.
+     *
+     * @param {string} code   OAuth2 authorisation code from query string.
+     * @returns {Promise<{ token: string, user: UserDTO, isNewUser: boolean }>}
+     */
+    static async handleMicrosoftCallback(code) {
+        const tokens  = await MicrosoftService.exchangeCodeForToken(code);
+        const profile = await MicrosoftService.getUserProfile(tokens.access_token);
+
+        const microsoftId = profile.sub;
+        const email        = (profile.email || '').toLowerCase().trim();
+        const name          = profile.name || profile.email || 'User';
+
+        if (!email) {
+            throw new Error('Microsoft account has no email or userPrincipalName to sign in with');
+        }
+
+        // 1. Try to find by Microsoft ID (fastest, most stable)
+        let user = await UserRepository.findByMicrosoftId(microsoftId);
+
+        // 2. Fall back to email lookup (handles users who signed up locally
+        //    or with Google first)
+        if (!user) {
+            user = await UserRepository.findByEmail(email);
+        }
+
+        if (user) {
+            // Returning user — ensure microsoft_id is persisted if missing
+            if (!user.microsoft_id) {
+                user = await UserRepository.update(user.id, {
+                    microsoft_id: microsoftId,
+                    provider:     'microsoft'
+                });
+            }
+        } else {
+            // New user — create account
+            user = await UserRepository.create({
+                name,
+                email,
+                provider:     'microsoft',
+                microsoft_id: microsoftId,
+                role:         'user',
+                ...AuthService._newAccountDefaults()
+            });
+        }
+
+        const isNewUser = !user.created_at ||
+            (new Date() - new Date(user.created_at)) < 5000;
+
+        const pair = await AuthService._buildTokenPair(user);
+
+        return {
+            token:     pair.accessToken,
+            refreshToken: pair.refreshToken,
+            user:      AuthService._toUserDTO(user),
+            isNewUser
+        };
+    }
+}
+
+module.exports = AuthService;

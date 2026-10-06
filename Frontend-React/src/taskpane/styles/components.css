@@ -1,0 +1,8 @@
+/* ============================================================
+   components.css — Aggregator for Shared UI Components
+   Cascade order strictly preserved
+   ============================================================ */
+
+@import "./components-auth.css";
+@import "./components-plans.css";
+@import "./components-checkout.css";

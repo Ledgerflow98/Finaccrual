@@ -1,0 +1,141 @@
+/* ============================================================
+   modals-trial-select.css
+   Trial Selection Screen & Action Cards
+   ============================================================ */
+
+/* ============================================================
+   TRIAL SELECT SCREEN
+   ============================================================ */
+.trial-select-screen {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+.trial-select-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.trial-select-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #172b56;
+  margin: 0 0 8px 0;
+}
+
+.trial-select-subtitle {
+  font-size: 14px;
+  color: #172b56;
+  font-weight: 500;
+  margin: 0;
+}
+
+.trial-select-cards {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.trial-select-card {
+  flex: 1;
+  border: 1px solid #dcdfe4;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.trial-select-card:hover {
+  border-color: #6C4DF6;
+  box-shadow: 0 8px 24px rgba(108, 77, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.trial-select-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #6C4DF6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.trial-select-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #172b56;
+  margin: 0 0 8px 0;
+}
+
+.trial-select-card-desc {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.4;
+  margin: 0 0 20px 0;
+  min-height: 36px;
+}
+
+.trial-select-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trial-select-features li {
+  font-size: 13px;
+  color: #172b56;
+  display: flex;
+  align-items: flex-start;
+}
+
+.trial-select-features .check {
+  color: #6C4DF6;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.btn-trial-action {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #6C4DF6;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color 0.2s;
+}
+
+.btn-trial-action:hover {
+  background-color: #5538d6;
+}
+
+.trial-select-secure {
+  margin-top: 30px;
+  font-size: 13px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+

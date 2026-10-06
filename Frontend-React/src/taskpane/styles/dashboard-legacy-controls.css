@@ -1,0 +1,239 @@
+/* ============================================================
+   dashboard-legacy-controls.css
+   Legacy Tier Dropdowns, Journal, Schedule, Console & Error
+   ============================================================ */
+
+/* Tier Section */
+.tier-section { padding-bottom: 4px; }
+
+.provider-dropdowns {
+  display: flex;
+  gap: 8px;
+}
+
+.provider-dropdown {
+  flex: 1;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.provider-dropdown.active {
+  border-color: #2459dd;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a2035;
+  cursor: pointer;
+  background: #f8f9fc;
+  user-select: none;
+  -webkit-user-select:none;
+}
+
+.provider-dropdown.active .dropdown-header {
+  background: #eff3ff;
+  color: #2459dd;
+}
+
+.dropdown-options {
+  display: none;
+  border-top: 1px solid #e4e8f4;
+}
+
+.provider-dropdown.expanded .dropdown-options {
+  display: block;
+}
+
+.dropdown-option {
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #4a5a7a;
+  cursor: pointer;
+  transition: background 0.15s;
+}.dropdown-option:hover { background: #f0f4ff; }
+.dropdown-option.active {
+  background: #eff3ff;
+  color: #2459dd;
+  font-weight: 600;
+}
+
+.arrow {
+  font-size: 9px;
+  transition: transform 0.2s;
+}
+
+.provider-dropdown.expanded .arrow {
+  transform: rotate(180deg);
+}
+
+/* Journal Section */
+.journal-section { padding-bottom: 4px; }
+
+.journal-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.journal-btn {
+  flex: 1;
+  height: 34px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1.5px solid #e4e8f4;
+  background: white;
+  color: #8a98b8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.journal-btn.active {
+  border-color: #2459dd;
+  color: #2459dd;
+  background: #eff3ff;
+}
+
+/* Schedule Section */
+.schedule-section { display: flex; flex-direction: column; gap: 8px; }
+
+.schedule-btn {
+  width: 100%;
+  height: 40px;
+  font-size: 13px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  border: none;
+}
+
+.schedule-btn.primary {
+  background: #172b56;
+  color: white;
+  box-shadow: 0 3px 10px rgba(23,43,86,0.18);
+}
+.schedule-btn.primary:hover { background: #1e3878; }
+
+.schedule-btn.secondary {
+  background: white;
+  color: #1a2035;
+  border: 1.5px solid #d0d8ef;
+}
+.schedule-btn.secondary:hover { background: #f8f9fc; }
+
+/* ERP Console */
+.erp-console { display: flex; flex-direction: column; gap: 8px; }
+
+.progress-panel {
+  background: #1e2332;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: #707a99;
+  font-size: 12px;
+}
+
+.progress-step:last-child { margin-bottom: 0; }
+
+.step-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2e364a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-complete .step-circle { background: #16a34a; }
+.step-complete { color: #e2e8f0; }
+
+.activity-log {
+  height: 80px;
+  overflow-y: auto;
+  background: #141820;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: 'Courier New', Consolas, monospace;
+  font-size: 11px;
+  color: #6ee7b7;
+}
+
+.log-line { margin-bottom: 3px; }
+
+/* ============================================================
+   ERROR VIEW
+   ============================================================ */
+.error-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  gap: 12px;
+  text-align: center;
+}
+
+.error-icon { font-size: 36px; }
+
+.error-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.error-msg {
+  font-size: 12px;
+  color: #6b7a9a;
+  max-width: 240px;
+  line-height: 1.5;
+}
+
+.error-retry-btn {
+  padding: 10px 24px;
+  background: #2459dd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 4px;
+}
+.error-retry-btn:hover { background: #1d48c4; }
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.hidden { display: none !important; }
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+

@@ -1,0 +1,282 @@
+/* ============================================================
+   dashboard-legacy-view.css
+   Legacy Dashboard Header, User Info & ERP Connect/Status
+   ============================================================ */
+
+/* ============================================================
+   DASHBOARD VIEW
+   ============================================================ */
+.dashboard-header {
+  background: #172b56;
+  padding: 12px 14px;
+  flex-shrink: 0;
+}
+
+.dash-user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dash-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2459dd, #7c5cfc);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dash-user-info {
+  flex: 1;
+}
+
+.dash-welcome {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.dash-plan-badge {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 2px 8px;
+  background: rgba(34,177,76,0.18);
+  border: 1px solid rgba(34,177,76,0.4);
+  color: #4ade80;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 20px;
+  letter-spacing: 0.4px;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #a5bde0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.logout-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #ffffff;
+}
+
+.dash-sub-id-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dash-sub-id-label {
+  font-size: 10px;
+  color: #5a78a8;
+}
+
+.dash-sub-id {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8ab4f8;
+  font-family: 'Courier New', monospace;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8a98b8;
+  margin-bottom: 10px;
+}
+
+.section-label-sm {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8a98b8;
+  margin-bottom: 8px;
+}
+
+/* ERP Connect Section */
+.erp-connect-section {
+  background: #f8f9fc;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.erp-connect-desc {
+  font-size: 11px;
+  color: #6b7a9a;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.erp-provider-cards {
+  display: flex;
+  gap: 10px;
+}
+
+.erp-provider-card {
+  flex: 1;
+  background: white;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 12px;
+  padding: 14px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.erp-provider-card:hover {
+  border-color: #2459dd;
+  background: #f0f4ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(36,89,221,0.12);
+}
+
+.erp-provider-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: white;
+}
+
+.qb-logo  { background: #2ca01c; }
+.xero-logo { background: #1ab4d7; }
+
+.erp-provider-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.erp-provider-action {
+  font-size: 10px;
+  color: #2459dd;
+  font-weight: 600;
+}
+
+/* ERP Connected Status */
+.erp-connected-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.erp-status-card {
+  background: #f8f9fc;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.erp-status-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.erp-status-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: white;
+  background: #2ca01c;
+  flex-shrink: 0;
+}
+
+.erp-status-info {
+  flex: 1;
+}
+
+.erp-status-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.erp-status-connected {
+  font-size: 11px;
+  color: #22b14c;
+  font-weight: 600;
+}
+
+.erp-disconnect-btn {
+  background: #fff1f2;
+  border: 1.5px solid #fda4af;
+  color: #be123c;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.erp-disconnect-btn:hover {
+  background: #ffe4e6;
+}
+
+.erp-status-meta {
+  border-top: 1px solid #edf0f8;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.erp-meta-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.erp-meta-label {
+  font-size: 11px;
+  color: #8a98b8;
+}
+
+.erp-meta-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1a2035;
+}
+

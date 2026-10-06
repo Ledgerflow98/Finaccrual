@@ -1,0 +1,308 @@
+/* ============================================================
+   dashboard-fluent-modals.css
+   Change Company Modal, Context Menu & Xero Selection
+   ============================================================ */
+
+/* ── CHANGE COMPANY MODAL ──────────────────────────────────────── */
+.fa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,20,40,0.45);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: viewFadeIn 0.2s ease;
+}
+.fa-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  overflow: hidden;
+}
+.fa-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #e2e8f4;
+}
+.fa-modal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a2035;
+}
+.fa-modal-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f4;
+  background: #fff;
+  color: #6b7a9a;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.fa-modal-close:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+.fa-modal-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f4ff;
+}
+.fa-modal-search {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: #1a2035;
+  background: transparent;
+}
+.fa-modal-search::placeholder { color: #94a3b8; }
+.fa-modal-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 240px;
+}
+.fa-modal-list::-webkit-scrollbar { width: 3px; }
+.fa-modal-list::-webkit-scrollbar-thumb { background: #e2e8f4; border-radius: 4px; }
+
+/* Modal company row */
+.fa-modal-company-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1.5px solid transparent;
+}
+.fa-modal-company-row:hover { background: #f0f4ff; }
+.fa-modal-company-row.selected { border-color: #173b7a; background: #eef2ff; }
+.fa-modal-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-top: 1px solid #f0f4ff;
+}
+.fa-modal-link-text { font-size: 10px; color: #94a3b8; }
+.fa-modal-add-link {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: #173b7a;
+  cursor: pointer;
+}
+.fa-modal-add-link:hover { text-decoration: underline; }
+.fa-modal-footer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid #e2e8f4;
+}
+.fa-btn-modal-cancel {
+  flex: 1;
+  padding: 9px;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 9px;
+  background: #fff;
+  color: #6b7a9a;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.fa-btn-modal-cancel:hover { border-color: #94a3b8; color: #1a2035; }
+.fa-btn-modal-primary {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  border-radius: 9px;
+  background: #173b7a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.fa-btn-modal-primary:hover { background: #122d61; box-shadow: 0 4px 12px rgba(23,59,122,0.3); }
+
+/* ── CONTEXT MENU ──────────────────────────────────────────────── */
+.fa-context-menu {
+  position: fixed;
+  z-index: 950;
+  background: #fff;
+  border: 1px solid #e2e8f4;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  overflow: hidden;
+  min-width: 140px;
+}
+.fa-context-item {
+  display: block;
+  width: 100%;
+  padding: 9px 14px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1a2035;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.fa-context-item:hover { background: #f0f4ff; color: #173b7a; }
+.fa-context-item.danger,
+.fa-context-item:last-child:not(:first-child) { color: #dc2626; }
+.fa-context-item.danger:hover,
+.fa-context-item:last-child:not(:first-child):hover { background: #fee2e2; }
+
+/* ── XERO COMPANY SELECTION LIST STYLING ───────────────────────── */
+.xero-company-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+  -webkit-user-select:none;
+}
+.xero-company-row:hover { border-color: #13b5ea; background: #f0f9ff; }
+.xero-company-row.selected {
+  border-color: #13b5ea;
+  background: rgba(19, 181, 234, 0.08);
+}
+.xero-company-cb {
+  width: 16px;
+  height: 16px;
+  accent-color: #13b5ea;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.xero-company-icon {
+  width: 32px; height: 32px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+.xero-company-row.selected .xero-company-icon {
+  background: linear-gradient(135deg, #13b5ea, #0d7db0);
+  color: #fff;
+}
+.xero-company-info { flex: 1; min-width: 0; }
+.xero-company-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2035;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xero-company-id {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+.xero-cb-visual {
+  width: 20px; height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.xero-company-row.selected .xero-cb-visual {
+  background: #13b5ea;
+  border-color: #13b5ea;
+}
+.xero-company-row.selected .xero-cb-visual::after {
+  content: '';
+  width: 7px; height: 7px;
+  background: #fff;
+  border-radius: 50%;
+  display: block;
+}
+
+/* ── REFRESH SCHEDULE STYLES ──────────────────────────────────── */
+.schedule-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+.schedule-header-row .conn-section-label,
+.schedule-header-row .fa-section-label {
+  margin: 0;
+}
+
+.refresh-schedule-btn {
+  background: none;
+  border: none;
+  color: #7c3aed; /* Elegant purple matching theme */
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.refresh-schedule-btn:hover {
+  opacity: 0.8;
+}
+
+.refresh-icon {
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.refresh-icon.spin {
+  animation: spin 1s linear infinite;
+}
+
+

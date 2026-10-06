@@ -1,0 +1,194 @@
+'use strict';
+
+const Joi = require('joi');
+const { SHEET_SCHEMAS, API_COMPARABLE_SHEETS } = require('../../modules/excelValidation/schemas/masterDataSchemas');
+
+/**
+ * Joi Schemas
+ * ----------------------------------------------------------------
+ * Data Type Validation.
+ *
+ * Centralized request-shape schemas, used with core/middleware/validate.js.
+ * These sit in front of the hand-rolled checks that already exist in
+ * modules/auth/auth.validation.js (regex email / min-length password) —
+ * the difference is that Joi also enforces actual data TYPES ("email
+ * must be a string", "tier must be one of these three strings", "an
+ * extra unexpected field is stripped/rejected") which the regex-only
+ * checks never covered.
+ * ----------------------------------------------------------------
+ */
+
+const email = Joi.string().trim().lowercase().email({ tlds: false }).max(150).required();
+
+const signup = Joi.object({
+    name:     Joi.string().trim().min(1).max(100).allow('', null),
+    email,
+    password: Joi.string().min(6).max(200).required()
+});
+
+const login = Joi.object({
+    email,
+    password: Joi.string().min(1).max(200).required()
+});
+
+const updatePlan = Joi.object({
+    plan: Joi.string().trim().lowercase().valid('trial', 'basic', 'standard', 'pro').required()
+});
+
+const renameConnection = Joi.object({
+    companyName: Joi.string().trim().min(1).max(255).required()
+});
+
+// GET /api/pull-master-data?companyId=...&platform=...&tier=...&cursor=...&mode=...&stream=...
+// `cursor` is the JSON-encoded pagination cursor echoed back from a
+// previous response. Declared here (rather than left undeclared) so
+// stripUnknown can't quietly drop it — the pull would then restart at
+// the first entity's first record on every click.
+// `mode=incremental` triggers delta-only fetching (MetaData.LastUpdatedTime
+// filter for QB; If-Modified-Since header for Xero) instead of a full pull.
+// `stream=true` upgrades the response to Server-Sent Events so the
+// frontend can display live progress.
+const pullMasterDataQuery = Joi.object({
+    companyId: Joi.string().trim().max(255).allow('', null),
+    platform:  Joi.string().trim().lowercase().valid('quickbooks', 'xero').required(),
+    tier:      Joi.string().trim().lowercase().valid('trial', 'basic', 'standard', 'pro').default('pro'),
+    cursor:    Joi.string().max(20000).allow('', null),
+    mode:      Joi.string().trim().lowercase().valid('incremental', 'full').default('full'),
+    stream:    Joi.string().trim().valid('true', 'false').default('false')
+});
+
+// GET /api/quickbooks/pull-master-data?companyId=...&tier=...
+// GET /api/xero/pull-master-data?companyId=...&tier=...
+// GET /api/quickbooks/refresh-incremental?companyId=...&tier=...
+// GET /api/xero/refresh-incremental?companyId=...&tier=...
+// (module-scoped variant — no `platform` param, since the module is
+// already implied by which router this is mounted under)
+// `mode=incremental` accepted for parity with the shared route but is
+// ignored here since the module controller always uses the explicit
+// incremental flag.
+const moduleMasterDataQuery = Joi.object({
+    companyId: Joi.string().trim().max(255).allow('', null),
+    tier:      Joi.string().trim().lowercase().valid('trial', 'basic', 'standard', 'pro').default('pro'),
+    cursor:    Joi.string().max(20000).allow('', null),
+    mode:      Joi.string().trim().lowercase().valid('incremental', 'full').default('full'),
+    stream:    Joi.string().trim().valid('true', 'false').default('false')
+});
+
+// GET /api/connections/stats?plan=...
+const connectionStatsQuery = Joi.object({
+    plan: Joi.string().trim().lowercase().valid('trial', 'basic', 'standard', 'pro').default('pro')
+});
+
+// GET /api/quickbooks/connect?tier=... , GET /api/xero/connect?tier=...
+const erpConnectQuery = Joi.object({
+    tier: Joi.string().trim().lowercase().valid('trial', 'basic', 'standard', 'pro').default('pro'),
+    // Present only when the user clicked "Reconnect" on one specific
+    // company: the ERP company/tenant id the resulting authorization is
+    // pinned to. Bounded here so a hostile value can't reach the ownership
+    // lookup in the controller as something other than a plain id string.
+    reconnectId: Joi.string().trim().max(255).optional()
+}).unknown(true); // OAuth connect URLs may legitimately carry other client-added params
+
+// POST /api/admin/login
+const adminLogin = Joi.object({
+    email,
+    password: Joi.string().min(1).max(200).required()
+});
+
+// POST /api/admin/signup
+const adminSignup = Joi.object({
+    name:     Joi.string().trim().min(1).max(100).required(),
+    email,
+    password: Joi.string().min(6).max(200).required()
+});
+
+// modules/billing/billing.service.js BillingService.ALLOWED_PLANS is
+// EXACT-CASE ['Basic', 'Standard', 'Pro'] (isValidPlan does a
+// case-sensitive `.includes()`) — deliberately NOT lowercased here like
+// the other plan schemas above, or every billing request would fail
+// isValidPlan() even though it passed this schema.
+const billingPlan = Joi.string().trim().valid('Basic', 'Standard', 'Pro').required();
+
+// POST /api/subscription/upgrade — { plan }
+const billingUpgrade = Joi.object({
+    plan: billingPlan
+});
+
+// POST /api/payments/complete — { email, plan }. Distinct from
+// billingUpgrade because this one is called from the checkout popup and
+// has to identify the user by email in the body instead of req.user.
+const completePayment = Joi.object({
+    email,
+    plan: billingPlan
+});
+
+// POST /api/xero/select-companies — { selectedTenantIds: [...] }
+const selectXeroCompanies = Joi.object({
+    selectedTenantIds: Joi.array().items(Joi.string().trim().min(1).max(255)).min(1).required()
+});
+
+// The uploaded workbook travels as base64 inside the JSON body (see
+// modules/excelValidation/controller.js for why — the multipart
+// alternative would require carving an exception into the global
+// validateContentType header gate). 15MB of base64 text comfortably
+// covers a multi-thousand-row master-data workbook; app.js raises the
+// express.json() body-size limit to match.
+const fileBase64 = Joi.string().min(4).max(20 * 1024 * 1024).required();
+
+// Every individual sheet schema this module knows about, plus the
+// special "MasterData" key that validates the full multi-sheet
+// workbook (Company/Customers/Vendors/Accounts/Classes/Locations) at
+// once — see modules/excelValidation/service.js#resolveSchemas.
+const excelSchemaNames = [...Object.keys(SHEET_SCHEMAS), 'MasterData'];
+
+// POST /api/excel-validation/schema-check
+// POST /api/excel-validation/data-type-check
+// POST /api/excel-validation/report
+const excelSchemaCheck = Joi.object({
+    fileBase64,
+    schema: Joi.string().valid(...excelSchemaNames).required()
+});
+
+// POST /api/excel-validation/vs-api — { fileBase64, sheet, platform }
+const excelVsApi = Joi.object({
+    fileBase64,
+    sheet:    Joi.string().valid(...API_COMPARABLE_SHEETS).required(),
+    platform: Joi.string().trim().lowercase().valid('quickbooks', 'xero').required()
+});
+
+// POST /api/excel-validation/vs-database — { fileBase64 }
+const excelVsDatabase = Joi.object({
+    fileBase64
+});
+
+// POST /api/notifications — { type, message, detail?, provider? }
+// userId is NEVER part of this schema — it always comes from the
+// verified req.user.userId (see modules/notifications/controller.js),
+// never a client-suppliable field, so one user can't create a
+// notification under another user's id.
+const createNotification = Joi.object({
+    type:     Joi.string().trim().lowercase().valid('success', 'error').required(),
+    message:  Joi.string().trim().min(1).max(500).required(),
+    detail:   Joi.string().trim().max(1000).allow('', null),
+    provider: Joi.string().trim().lowercase().valid('quickbooks', 'xero').allow(null)
+});
+
+module.exports = {
+    signup,
+    login,
+    updatePlan,
+    renameConnection,
+    pullMasterDataQuery,
+    moduleMasterDataQuery,
+    connectionStatsQuery,
+    erpConnectQuery,
+    adminLogin,
+    adminSignup,
+    billingUpgrade,
+    completePayment,
+    selectXeroCompanies,
+    excelSchemaCheck,
+    excelVsApi,
+    excelVsDatabase,
+    createNotification
+};

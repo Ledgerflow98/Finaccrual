@@ -1,0 +1,13 @@
+/* ============================================================
+   dashboard.css — Aggregator for Dashboard Modules
+   Cascade order strictly preserved
+   ============================================================ */
+
+@import "./dashboard-legacy-view.css";
+@import "./dashboard-legacy-controls.css";
+@import "./dashboard-not-connected.css";
+@import "./dashboard-connected-tabs.css";
+@import "./dashboard-account-menu.css";
+@import "./dashboard-fluent-header.css";
+@import "./dashboard-fluent-companies.css";
+@import "./dashboard-fluent-modals.css";

@@ -1,0 +1,227 @@
+/* ============================================================
+   components-plans.css
+   Plans View, Billing Toggle & Pricing Cards
+   ============================================================ */
+
+/* ============================================================
+   PLANS VIEW
+   ============================================================ */
+.plans-intro {
+  margin-bottom: 12px;
+}
+
+.plans-intro-text {
+  font-size: 12px;
+  color: #5a6a8a;
+  text-align: center;
+}
+
+.billing-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.billing-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a98b8;
+  transition: color 0.2s;
+}
+
+.billing-label.active-label {
+  color: #1a2035;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 21px;
+}
+
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #d0d8ef;
+  border-radius: 21px;
+  transition: 0.3s;
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .toggle-slider {
+  background: #2459dd;
+}
+input:checked + .toggle-slider::before {
+  transform: translateX(17px);
+}
+
+.save-chip {
+  background: #22b14c;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.plan-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plan-card {
+  background: #f8f9fc;
+  border: 1.5px solid #e4e8f4;
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  position: relative;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.plan-card:hover {
+  box-shadow: 0 4px 18px rgba(36,89,221,0.1);
+  transform: translateY(-1px);
+}
+
+.plan-card-featured {
+  border-color: #2459dd;
+  background: linear-gradient(145deg, #eef3ff 0%, #f4f0ff 100%);
+  box-shadow: 0 4px 20px rgba(36,89,221,0.1);
+}
+
+.plan-popular-badge {
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  background: linear-gradient(135deg, #2459dd, #7c5cfc);
+  color: white;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.plan-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.plan-icon {
+  font-size: 16px;
+}
+
+.plan-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.starter-color { color: #e8a020; }
+.pro-color     { color: #2459dd; }
+.ent-color     { color: #0ea5e9; }
+
+.plan-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  margin-bottom: 10px;
+}
+
+.plan-currency {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.plan-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a2035;
+  line-height: 1;
+}
+
+.plan-amount-custom {
+  font-size: 20px;
+}
+
+.plan-period {
+  font-size: 11px;
+  color: #6b7a9a;
+  margin-left: 2px;
+}
+
+.plan-features {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.plan-features li {
+  font-size: 11px;
+  color: #4a5a7a;
+  margin-bottom: 5px;
+}
+
+.plan-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  letter-spacing: 0.2px;
+}
+
+.plan-btn-starter {
+  background: #fff7e6;
+  color: #b45309;
+  border: 1.5px solid #fde68a;
+}
+.plan-btn-starter:hover { background: #fef3c7; }
+
+.plan-btn-pro {
+  background: linear-gradient(135deg, #2459dd, #7c5cfc);
+  color: white;
+  box-shadow: 0 4px 12px rgba(36,89,221,0.25);
+}
+.plan-btn-pro:hover { box-shadow: 0 6px 16px rgba(36,89,221,0.35); }
+
+.plan-btn-ent {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1.5px solid #bae6fd;
+}
+.plan-btn-ent:hover { background: #e0f2fe; }
+
+.plans-secure-note {
+  text-align: center;
+  font-size: 10px;
+  color: #8a98b8;
+  margin-top: 14px;
+  padding-bottom: 8px;
+}
+

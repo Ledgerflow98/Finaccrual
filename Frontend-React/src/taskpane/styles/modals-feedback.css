@@ -1,0 +1,155 @@
+/* ============================================================
+   modals-feedback.css
+   Global Error Banners, Flash Animations & Toasts
+   ============================================================ */
+
+/* ============================================================
+   GLOBAL ERROR HANDLING UI
+   Driven by shared/apiErrorHandler.js. Sits above every view.
+   ============================================================ */
+
+/* Persistent, actionable banner — used for the offline/server-unreachable
+   scenario (red) and the ERP connection expired scenario (orange). */
+.fa-global-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  animation: faBannerSlideDown 0.25s ease;
+}
+
+@keyframes faBannerSlideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+.fa-banner-flash {
+  animation: faBannerShake 0.35s ease-in-out !important;
+}
+
+@keyframes faBannerShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.fa-global-banner-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.fa-global-banner-message {
+  flex: 1;
+  min-width: 0;
+}
+
+.fa-global-banner-action {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.fa-global-banner-action:hover {
+  opacity: 0.85;
+}
+
+.fa-global-banner-dismiss {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0.7;
+  font-family: inherit;
+}
+
+.fa-global-banner-dismiss:hover {
+  opacity: 1;
+}
+
+/* Offline / cannot-reach-server — red */
+.fa-global-banner-offline {
+  background: #fff1f2;
+  color: #be123c;
+  border-bottom: 1px solid #fda4af;
+}
+
+.fa-global-banner-offline .fa-global-banner-action {
+  background: #be123c;
+  color: #fff;
+}
+
+.fa-global-banner-offline .fa-global-banner-dismiss {
+  color: #be123c;
+}
+
+.app.has-global-banner {
+  padding-top: 40px !important;
+}
+
+/* ERP (QuickBooks/Xero) connection expired — orange */
+.fa-global-banner-erp {
+  background: #fff7e6;
+  color: #b45309;
+  border-bottom: 1px solid #fde68a;
+}
+
+.fa-global-banner-erp .fa-global-banner-action {
+  background: #b45309;
+  color: #fff;
+}
+
+.fa-global-banner-erp .fa-global-banner-dismiss {
+  color: #b45309;
+}
+
+/* Generic fallback — used sparingly */
+.fa-global-banner-error {
+  background: #fff1f2;
+  color: #be123c;
+  border-bottom: 1px solid #fda4af;
+}
+
+/* Transient toast — used for the session-expired notice */
+.fa-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%) translateY(12px);
+  z-index: 100000;
+  background: #1a2035;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: 90%;
+  text-align: center;
+}
+
+.fa-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+

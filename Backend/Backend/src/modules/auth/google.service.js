@@ -1,0 +1,135 @@
+'use strict';
+
+const axios       = require('axios');
+const querystring = require('querystring');
+const logger      = require('../../core/logger');
+const config      = require('../../core/config');
+
+/**
+ * GoogleAuthService
+ * ----------------------------------------------------------------
+ * Handles the low-level Google OAuth 2.0 HTTP calls.
+ * Moved from modules/google/service.js so that all auth-related
+ * code lives inside the auth module.
+ *
+ * The original modules/google/service.js is kept intact and simply
+ * re-exports this file to avoid breaking existing imports.
+ * ----------------------------------------------------------------
+ */
+class GoogleAuthService {
+
+    /**
+     * Build the Google OAuth 2.0 authorisation redirect URL.
+     *
+     * @param {string} [loginHint] - A previously-seen account's email.
+     *   When present, Google is told which account to use up front via
+     *   `login_hint` and skips its "choose an account" screen — this is
+     *   what lets the account-picker's "previous account" row jump
+     *   straight through instead of re-showing the full chooser. The
+     *   forced `prompt: 'consent'` is dropped in that case too: it's only
+     *   needed to guarantee a consent screen the very first time (e.g.
+     *   "Add account"), and forcing it on every return visit is exactly
+     *   the friction a remembered account is meant to avoid. Google still
+     *   shows consent on its own if scopes were never granted or were
+     *   revoked, so this doesn't weaken authorisation — it just stops
+     *   asking again when it doesn't need to.
+     * @returns {string}
+     */
+    getAuthUrl(loginHint) {
+        const clientId    = config.GOOGLE.CLIENT_ID || process.env.GOOGLE_CLIENT_ID;
+        const redirectUri = config.GOOGLE.REDIRECT_URI || process.env.GOOGLE_REDIRECT_URI || 'http://localhost:8000/api/auth/google/callback';
+
+        if (!clientId) {
+            logger.error('GOOGLE_CLIENT_ID is missing from .env file!');
+            throw new Error('GOOGLE_CLIENT_ID is not configured in .env file');
+        }
+
+        const params = {
+            client_id:     clientId,
+            redirect_uri:  redirectUri,
+            response_type: 'code',
+            scope:         'openid email profile',
+            access_type:   'offline'
+        };
+
+        if (loginHint) {
+            params.login_hint = loginHint;
+        } else {
+            params.prompt = 'consent';
+        }
+
+        return `https://accounts.google.com/o/oauth2/v2/auth?${querystring.stringify(params)}`;
+    }
+
+    /**
+     * Exchange an authorisation code for access/refresh tokens.
+     * @param {string} code
+     * @returns {Promise<object>} token response data
+     */
+    async exchangeCodeForToken(code) {
+        try {
+            const clientId     = config.GOOGLE.CLIENT_ID || process.env.GOOGLE_CLIENT_ID;
+            const clientSecret = config.GOOGLE.CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET;
+            const redirectUri  = config.GOOGLE.REDIRECT_URI || process.env.GOOGLE_REDIRECT_URI || 'http://localhost:8000/api/auth/google/callback';
+
+            const response = await axios.post(
+                'https://oauth2.googleapis.com/token',
+                querystring.stringify({
+                    code,
+                    client_id:     clientId,
+                    client_secret: clientSecret,
+                    redirect_uri:  redirectUri,
+                    grant_type:    'authorization_code'
+                }),
+                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+            );
+            return response.data;
+        } catch (error) {
+            // Diagnostic detail: when Google responds with an error (4xx),
+            // error.response.data carries their { error, error_description }
+            // body (e.g. "invalid_grant", "redirect_uri_mismatch",
+            // "invalid_client") — that's the actionable reason. When the
+            // request never got a response at all (network/DNS/TLS/proxy
+            // failure reaching oauth2.googleapis.com), error.response is
+            // undefined and error.code (ECONNREFUSED, ENOTFOUND, ETIMEDOUT,
+            // "UNABLE_TO_VERIFY_LEAF_SIGNATURE" for TLS-inspecting
+            // antivirus/proxies, etc.) is the actionable reason instead.
+            // Logging both cases explicitly avoids ever landing on a bare,
+            // uninformative "Failed to exchange Google code for token".
+            const googleErrorBody = error.response?.data;
+            const diagnostic = googleErrorBody
+                ? { httpStatus: error.response.status, ...googleErrorBody }
+                : { networkErrorCode: error.code || 'UNKNOWN', message: error.message };
+
+            console.error("GOOGLE EXCHANGE ERROR:", JSON.stringify(diagnostic));
+            logger.error('Failed to exchange Google code for token', JSON.stringify(diagnostic));
+
+            const reason = googleErrorBody
+                ? `${googleErrorBody.error || 'unknown_error'}${googleErrorBody.error_description ? ': ' + googleErrorBody.error_description : ''}`
+                : `${error.code || 'network_error'}: ${error.message}`;
+            const wrapped = new Error(`Google token exchange failed (${reason})`);
+            wrapped.cause = error;
+            throw wrapped;
+        }
+    }
+
+    /**
+     * Fetch the authenticated user's Google profile.
+     * @param {string} accessToken
+     * @returns {Promise<{ sub, email, name, picture }>}
+     */
+    async getUserProfile(accessToken) {
+        try {
+            const response = await axios.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
+            return response.data;
+        } catch (error) {
+            logger.error('Failed to fetch Google user profile', error.response?.data || error.message);
+            throw error;
+        }
+    }
+}
+
+module.exports = new GoogleAuthService();
